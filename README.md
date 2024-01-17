@@ -1,5 +1,5 @@
 ## LAB - Class 04
-- Project: pythonic-garage-band
+- Project: ten-thousand
 
 - Author: DeAndre Ordonez
 
@@ -7,51 +7,24 @@
 ### Setup - N/A
 ### PORT - N/A
 ### DATABASE_URL - N/A
-### How to initialize/run your application - python test_band.py
+### How to initialize/run your application
+    - Run pytest in directory or tests.
 ### How to use your library - N/A
-Tests
+
+## Tests
+
 ### How do you run tests?
 
-**Using pytest, provided functions in test_band.py to test the classes in band.py .**
+**Using pytest, provided functions in game_logic.py to test the calculate_score.py and test_roll_dice.py .**
 
-- **Tested**
+**Tested**
 
-        test_guitarist_str - Tested Guitarist class and str method, returned expected
-        
-        test_guitarist_repr - Tested Guitarist class and repr method, returned expected
-
-        test_drummer_str - Test Drummer class and str method, returned expected
-
-        test_drummer_repr - Tested Guitarist class and repr method, returned expected
-
-        test_bassist_str - Test Bassist class and str method, returned expected
-
-        test_bassist_repr - Tested Bassist class and repr method, returned expected
-
-        test_band_name - Tested Band class, returned expected name
-
-        test_guitarist - Tested Guitarist class and get_instrument() method, returned expected
-
-        test_bassist -Tested Bassist class and get_instrument() method, returned expected
-
-        test_drummer -Tested Drummer class and get_instrument() method, returned expected
-
-        test_instruments - Tested one_band() fixture, provided members and assigned instruments
-
-        test_individual_solos -Tested one_band() fixture, tested play_solo method in respective classes
-
-        test_band_members - Tested one_band() fixture, tested to see if members were instanced
-        
-        test_play_solos_for_whole_band -  Tested one_band() fixture, Tested play_solo methods in respective classes and returned the proper values
-
-        test_class_tracks_instances - Tested reset_band(), previous instances were cleared, allowing only one instance to be stored
-
-        test_to_list - Tested reset_band(), previous instances were cleared
-
+    - test_calculate_score.py, has functions testing calculate_score method in game_logic
+    - test_roll_dice.py, has functions testing roll_dice method in game_logic    
 
 ### Any tests of note?
 
-The fixture ones were interesting in following the process in how they worked
+- The `three`, `four`, `five`, and `six_of_a_kind`, the confusion in passing `three_of_a_kind`.  `three` and `four` logic resulted in messed up logic for the other two.
 
 ### Describe any tests that you did not complete, skipped, etc
 
