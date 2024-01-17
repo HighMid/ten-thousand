@@ -1,4 +1,4 @@
-## LAB - Class 04
+## LAB - Class 06
 - Project: ten-thousand
 
 - Author: DeAndre Ordonez
