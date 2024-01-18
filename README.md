@@ -1,30 +1,39 @@
-## LAB - Class 06
+## LAB - Class 07
 - Project: ten-thousand
 
 - Author: DeAndre Ordonez
+- Partner: Armando Bugarin
 
 ### Links and Resources - N/A
 ### Setup - N/A
 ### PORT - N/A
 ### DATABASE_URL - N/A
 ### How to initialize/run your application
-    - Run pytest in directory or tests.
-### How to use your library - N/A
+    - Run python ten_thousand/game.py
+
+### How to use your library 
+
+    - pip install -r requirements.txt
+    
+    Currently have :
+        - pygame==2.0.1
+        - pytest==6.2.2
+
+    However pytest is the only library in use if you wish to install only that.
 
 ## Tests
 
 ### How do you run tests?
 
-**Using pytest, provided functions in game_logic.py to test the calculate_score.py and test_roll_dice.py .**
+**Using my eyeballs, I compared the simulation text to be as close as possible to the tests in [version_2](tests\version_2)**
 
 **Tested**
 
-    - test_calculate_score.py, has functions testing calculate_score method in game_logic
-    - test_roll_dice.py, has functions testing roll_dice method in game_logic    
+    - test_sim_basic.py, has functions testing simulated user interaction.
 
 ### Any tests of note?
 
-- The `three`, `four`, `five`, and `six_of_a_kind`, the confusion in passing `three_of_a_kind`.  `three` and `four` logic resulted in messed up logic for the other two.
+- The `test_quitter()`, how could someone just boot up a game and not play it.
 
 ### Describe any tests that you did not complete, skipped, etc
 
