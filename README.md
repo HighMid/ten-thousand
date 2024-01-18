@@ -25,7 +25,7 @@
 
 ### How do you run tests?
 
-**Using my eyeballs, I compared the simulation text to be as close as possible to the tests in [version_2](https://github.com/HighMid/ten-thousand/blob/main/tests/version_2/test_sim_basic.py)**
+**Using my eyeballs, I compared the simulation text to be as close as possible to the tests in version_2**
 
 **Tested**
 
