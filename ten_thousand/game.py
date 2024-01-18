@@ -1,7 +1,12 @@
-from game_logic import GameLogic
+from game_logic import GameLogic, GameConfig, Game
 from collections import Counter
+import pygame
 
+def main(roller=True, maxRound=20):
+    
+    pygame.mixer.init()
+    GameConfig.setup_music()
+    
+    pass
 
-
-# To test the game with the real dice roller
-play()
+main() 
