@@ -2,6 +2,12 @@ import random
 from collections import Counter
 # import pygame
 from ten_thousand.print_functions import delay_print, delay_print_fast
+import logging
+
+logging.basicConfig(level=logging.DEBUG,
+                    format='%(asctime)s %(levelname)s: %(message)s',
+                    datefmt='%Y-%m-%d %H:%M:%S',
+                    handlers=[logging.FileHandler('debug.log'), logging.StreamHandler()])
 
 rolls = [
             (4, 4, 5, 2, 3, 1),
@@ -15,9 +21,9 @@ rolls = [
             (3, 2, 3, 2, 1, 4),
             (2, 3, 1, 3, 1, 2),
             (4, 1, 4, 4, 3, 4),
-            # (3, 2, 3, 2, 1, 4),
-            # (5, 2, 3, 5, 4, 2),
-            # (5, 2, 3, 5, 4, 2),
+            (3, 2, 3, 2, 1, 4),
+            (5, 2, 3, 5, 4, 2),
+            (5, 2, 3, 5, 4, 2),
             (1, 2, 5, 1, 2, 1),
             (4, 4),
             (1, 1, 2, 5, 1, 6)
@@ -164,6 +170,7 @@ class Game:
             if roll_counter[die] < count:
                 return False
         return True
+    
     def play_game(self, roller, max_rounds=20):    
         """
         Play the 'Ten Thousand' dice game.
@@ -198,32 +205,82 @@ class Game:
             num_dice = 6
             round_score = 0
             round_rolls = []
+            repeat = 0
 
             while num_dice > 0:
-                print(f"Rolling {num_dice} dice...")
+                
+                if repeat == 0:
+                    print(f"Rolling {num_dice} dice...")
+                
                 dice_roll = roller(num_dice)
                 print("*** ", " ".join(map(str, dice_roll)), " ***")
                 round_rolls.extend(dice_roll)
+                
+                if GameLogic.calculate_score(dice_roll) == 0:
+                    # Handle zilch scenario
+                    print("*" * 40)
+                    print("**        Zilch!!! Round over         **")
+                    print("*" * 40)
+                    round_score = 0  # Reset unbanked points
+                    print(f"You banked {round_score} points in round {round_number}")
+                    print(f"Total score is {total_score} points")
+                    break  # End the current turn
+                
+                repeat = 0
 
-                keep = input("Enter dice to keep, or (q)uit:\n> ")
+                keep = input("Enter dice to keep, or (q)uit:\n> ").strip()
                 if keep.lower() == 'q':
+                    # print("LOOK HERE", keep)
                     playing = False
                     break
 
-                kept_dice = tuple(map(int, keep))  # Convert 'keep' to a tuple of integers
-                if self.valid_kept_dice(kept_dice, round_rolls):
-                    points = GameLogic.calculate_score(kept_dice)
-                    round_score += points
-                    num_dice -= len(kept_dice)
-                else:
-                    print("Invalid dice selection. Please choose again.")
+                try:
+                    kept_dice = tuple(map(int, keep))  # Convert 'keep' to a tuple of integers
+                except ValueError:
+                    if keep == 'r':
+                        continue
+                    if kept_dice == ():
+                        kept_dice = tuple(map(str, keep.split()))
+                        kept_dice = tuple(map(int, kept_dice))
+                    
+                if not self.valid_kept_dice(kept_dice, round_rolls):
+                    repeat = 1
+                    print("Cheater!!! Or possibly made a typo...")
+                    kept_dice = tuple()
                     continue  # Skip the rest of the loop and prompt for dice again
 
-                print(f"You have {round_score} unbanked points and {num_dice} dice remaining")
+                points = GameLogic.calculate_score(kept_dice)
+                
+                
+                if points == 0:
+                    points = 0
+                
+                else:
+                    round_score += points
+                    num_dice -= len(kept_dice)        
+                
                 if num_dice == 0 and points > 0:
                     num_dice = 6
+                    print(f"You have {round_score} unbanked points and {num_dice} dice remaining")
                     round_rolls.clear()
-                    continue
+                    decision = input("(r)oll again, (b)ank your points or (q)uit:\n> ")
+                    if decision.lower() in ['b', 'bank']:
+                        total_score += round_score
+                        print(f"You banked {round_score} points in round {round_number}")
+                        print(f"Total score is {total_score} points")
+                        break
+                    elif decision.lower() in ['r', 'roll']:
+                        continue
+                    elif decision.lower() in ['q', 'quit']:
+                        playing = False
+                        break
+                    
+                if num_dice == 0 and points == 0:
+                    print("*" * 40)
+                    print("**\tZilch!!! Round over\t**")
+                    print("*" * 40)
+                    
+                print(f"You have {round_score} unbanked points and {num_dice} dice remaining")
                 
                 if num_dice == 0:
                     print("You've used all your dice. Time to bank your points.")
@@ -301,10 +358,6 @@ class Game:
             else:
                 delay_print("Sorry I didn't catch that can you repeat that? (Invalid Response)")
                 
-    
-    
-    
-
         
 # def main():
     
