@@ -17,10 +17,10 @@ def delay_print_sound(text, delay=0.05, sound_interval=3):
     print()
 
 def delay_print(text, delay=0.05):
-    
-    sys.stdout.write(text)
-    sys.stdout.flush()
-    time.sleep(delay)
+    for slowed in text:
+        sys.stdout.write(slowed)
+        sys.stdout.flush()
+        time.sleep(delay)
     print()
     
 def delay_print_fast(text, delay=0.02):
