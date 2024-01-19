@@ -1,4 +1,4 @@
-## LAB - Class 07
+## LAB - Class 08
 - Project: ten-thousand
 
 - Author: DeAndre Ordonez
@@ -25,7 +25,7 @@
 
 ### How do you run tests?
 
-**Using my eyeballs, I compared the simulation text to be as close as possible to the tests in version_2**
+**Ran pytest, completed version_2, version_3 1/4 tests pass**
 
 **Tested**
 
@@ -34,7 +34,8 @@
 ### Any tests of note?
 
 - The `test_quitter()`, how could someone just boot up a game and not play it.
+- The last three tests in version_3 
 
 ### Describe any tests that you did not complete, skipped, etc
 
-Stretch Goals
+Last three tests in version_3
