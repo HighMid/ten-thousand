@@ -13,15 +13,14 @@ def test_repeat_roller():
     print(diffs)
     assert not diffs, diffs
 
-@pytest.mark.skip('TODO')
 def test_hot_dice():
     """When all dice are used without a zilch
     then user gets 6 fresh dice and continues turn.
     """
     diffs = diff(play, path="tests/version_3/hot_dice.sim.txt")
+    print("START HERE")
     print(diffs)
     assert not diffs, diffs
-
 
 def test_cheat_and_fix():
     """Cheating (or typos) should not be allowed.
