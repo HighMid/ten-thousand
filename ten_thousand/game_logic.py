@@ -1,7 +1,27 @@
 import random
 from collections import Counter
-import pygame
-from ten_thousand.print_functions import delay_print, delay_print_fast, delay_print_sound
+# import pygame
+from ten_thousand.print_functions import delay_print, delay_print_fast
+
+rolls = [
+            (4, 4, 5, 2, 3, 1),
+            (4, 2, 6, 4, 6, 5),
+            (6, 4, 5, 2, 3, 1),
+            (3, 2, 5, 4, 3, 3),
+            (5, 2, 3, 2, 1, 4),
+            (6, 6, 5, 4, 2, 1),
+            (2, 3, 1, 3, 4, 2),
+            (4, 2, 4, 4, 6),
+            (3, 2, 3, 2, 1, 4),
+            (2, 3, 1, 3, 1, 2),
+            (4, 1, 4, 4, 3, 4),
+            # (3, 2, 3, 2, 1, 4),
+            # (5, 2, 3, 5, 4, 2),
+            # (5, 2, 3, 5, 4, 2),
+            (1, 2, 5, 1, 2, 1),
+            (4, 4),
+            (1, 1, 2, 5, 1, 6)
+            ]
 
 class GameLogic:
     @staticmethod
@@ -67,34 +87,61 @@ class GameLogic:
         """
         # Generate and return a tuple of random integers between 1 and 6, with the number of elements equal to num_dice.
         return tuple(random.randint(1, 6) for _ in range(num_dice))
-
-class GameConfig:
     
     @staticmethod
-    def setup_music():
+    def get_scorers(dice):
+        """
+        Return a tuple of dice values that are scorable.
+        """
+        return tuple(d for d in dice if d == 1 or d == 5)
     
-        choice = input("Would you like music to be played? Yes/No: ").strip()
+    @staticmethod
+    def validate_keepers(roll, keepers):
+        """
+        Check if the kept dice are a valid subset of the rolled dice.
+        """
+        roll_counter = Counter(roll)
+        kept_counter = Counter(keepers)
+        for die, count in kept_counter.items():
+            if roll_counter[die] < count:
+                return False
+        return True
+    
+
+# class GameConfig:
+    
+#     @staticmethod
+#     def setup_music():
+    
+#         choice = input("Would you like music to be played? Yes/No: ").strip()
         
-        if choice.lower() in ['yes', 'y']:
-            pygame.mixer.init()
-            pygame.mixer.music.load("ten_thousand\Shnabubula - VGMCAST Vol. 8 - 01 Final Fantasy VIII - Shuffle or Boogie.mp3")
-            pygame.mixer.music.play(-1)
-            pygame.mixer.music.set_volume(0.5)
-            return
+#         if choice.lower() in ['yes', 'y']:
+#             pygame.mixer.init()
+#             pygame.mixer.music.load("ten_thousand\Shnabubula - VGMCAST Vol. 8 - 01 Final Fantasy VIII - Shuffle or Boogie.mp3")
+#             pygame.mixer.music.play(-1)
+#             pygame.mixer.music.set_volume(0.5)
+#             return
         
-        if choice.lower() in ['n', 'no']:
+#         if choice.lower() in ['n', 'no']:
             
-            print("No worries, maybe next time.")
-        else:
-            print("No worries, maybe next time.")
+#             print("No worries, maybe next time.")
+#         else:
+#             print("No worries, maybe next time.")
 
 class Game:
     
     def __init__(self, test_mode=False):
         self.test_mode = test_mode
+        
+    def custom_roller(self):
+        
+        roll_iter = iter(rolls)
+        
+        def roll(num_dice):
+            return rolls.pop(0) if rolls else (1,) * num_dice
+        return roll
     
     def valid_kept_dice(self, kept_dice, dice_roll):
-        
         
         """
         Check if the kept dice are a valid subset of the rolled dice.
@@ -117,7 +164,7 @@ class Game:
             if roll_counter[die] < count:
                 return False
         return True
-    def play_game(self, roller=None, max_rounds=20):    
+    def play_game(self, roller, max_rounds=20):    
         """
         Play the 'Ten Thousand' dice game.
 
@@ -130,6 +177,8 @@ class Game:
 
         The game continues until the player decides to quit or the end condition is met.
         """
+        if roller == 5:
+            roller = self.custom_roller()
         
         if roller is None:
             roller = GameLogic.roll_dice
@@ -151,9 +200,10 @@ class Game:
             round_rolls = []
 
             while num_dice > 0:
+                print(f"Rolling {num_dice} dice...")
                 dice_roll = roller(num_dice)
+                print("*** ", " ".join(map(str, dice_roll)), " ***")
                 round_rolls.extend(dice_roll)
-                print("***", " ".join(map(str, dice_roll)), "***")
 
                 keep = input("Enter dice to keep, or (q)uit:\n> ")
                 if keep.lower() == 'q':
@@ -165,24 +215,29 @@ class Game:
                     points = GameLogic.calculate_score(kept_dice)
                     round_score += points
                     num_dice -= len(kept_dice)
-                    round_rolls = [die for die in round_rolls if die not in kept_dice]
-                    print(f"You have {points} points with the current dice.")
                 else:
                     print("Invalid dice selection. Please choose again.")
                     continue  # Skip the rest of the loop and prompt for dice again
 
                 print(f"You have {round_score} unbanked points and {num_dice} dice remaining")
+                if num_dice == 0 and points > 0:
+                    num_dice = 6
+                    round_rolls.clear()
+                    continue
+                
                 if num_dice == 0:
                     print("You've used all your dice. Time to bank your points.")
                     break
 
                 decision = input("(r)oll again, (b)ank your points or (q)uit:\n> ")
-                if decision.lower() == 'b':
+                if decision.lower() in ['b', 'bank']:
                     total_score += round_score
                     print(f"You banked {round_score} points in round {round_number}")
                     print(f"Total score is {total_score} points")
                     break
-                elif decision.lower() == 'q':
+                elif decision.lower() in ['r', 'roll']:
+                    continue
+                elif decision.lower() in ['q', 'quit']:
                     playing = False
                     break
 
@@ -245,6 +300,10 @@ class Game:
                 exit()
             else:
                 delay_print("Sorry I didn't catch that can you repeat that? (Invalid Response)")
+                
+    
+    
+    
 
         
 # def main():
@@ -255,4 +314,3 @@ class Game:
 #     menu()
     
 # if __name__ == "__main__":
-

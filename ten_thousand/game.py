@@ -1,24 +1,25 @@
-from ten_thousand.game_logic import GameConfig, Game
+from ten_thousand.game_logic import Game
 from collections import Counter
-import pygame
+# import pygame
 
-def play():
+def play(roller=None):
     
     max_rounds = 20
-    roller = None
+    roller = 5
     
     
-    pygame.mixer.init()
+    # pygame.mixer.init()
     
-    print()
-    
+
     game = Game()
     # game_config = GameConfig()
     
-    game.play_game()
+    game.play_game(roller=roller, max_rounds=max_rounds)
     # game_config.setup_music()
-    game.intro()
-    game.menu(roller, max_rounds)
+    # game.intro()
+    # game.menu(roller, max_rounds)
     
 
-play() 
+if __name__ == "__main__":
+    play()
+ 
